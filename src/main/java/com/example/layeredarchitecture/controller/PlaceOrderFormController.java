@@ -202,9 +202,6 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            /*Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");*/
 
             ArrayList<CustomerDTO> customerDTOS = customerDAO.loadAllCustomer();
 
@@ -223,9 +220,6 @@ public class PlaceOrderFormController {
     private void loadAllItemCodes() {
         try {
             /*Get all items*/
-           /* Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Item");*/
 
             ArrayList<ItemDTO> itemDTOS = itemDAO.loadAllItems();
 
@@ -329,8 +323,6 @@ public class PlaceOrderFormController {
         /*Transaction*/
         OrderDTO orderDTO = new OrderDTO(orderId, orderDate, customerId, null, null);
         try {
-
-
             /*if order id already exist*/
             if (orderDAO.existOrderId(orderId)) {
                 return false;
@@ -346,7 +338,7 @@ public class PlaceOrderFormController {
                 }
 
 
-//                //Search & Update Item
+                //Search & Update Item
                 ItemDTO itemDTO = itemDAO.FindItem(detail.getItemCode());
                 itemDTO.setQtyOnHand(itemDTO.getQtyOnHand() - detail.getQty());
 
