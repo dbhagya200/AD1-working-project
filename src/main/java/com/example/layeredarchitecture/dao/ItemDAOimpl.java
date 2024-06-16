@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ItemDAOimpl {
+public class ItemDAOimpl implements ItemDAO {
 
     public ArrayList<ItemDTO> loadAllItems() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
@@ -37,14 +37,14 @@ public class ItemDAOimpl {
         pstm.setInt(4, qtyOnHand);
         pstm.executeUpdate();
     }
-    public void updateItem(String code, String description, BigDecimal unitPrice, int qtyOnHand) throws SQLException, ClassNotFoundException {
+    public boolean updateItem(String code, String description, BigDecimal unitPrice, int qtyOnHand) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
         pstm.setString(1, description);
         pstm.setBigDecimal(2, unitPrice);
         pstm.setInt(3, qtyOnHand);
         pstm.setString(4, code);
-        pstm.executeUpdate();
+        return pstm.executeUpdate()>0;
     }
     public void deleteItem(String code) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
@@ -68,12 +68,14 @@ public class ItemDAOimpl {
         return rst;
     }
 
-    public ResultSet FindItem(String newItemCode) throws SQLException, ClassNotFoundException {
+    public ItemDTO FindItem(String newItemCode) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
         pstm.setString(1, newItemCode + "");
         ResultSet rst = pstm.executeQuery();
-        return rst;
+        rst.next();
+        return new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+
     }
 
     public ResultSet getAllItems() throws SQLException, ClassNotFoundException {

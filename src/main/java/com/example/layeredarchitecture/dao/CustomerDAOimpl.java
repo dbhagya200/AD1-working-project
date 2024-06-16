@@ -62,12 +62,13 @@ public class CustomerDAOimpl implements CustomerDAO{
         ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
         return rst;
     }
- public ResultSet SearchCustomer(String newValue) throws SQLException, ClassNotFoundException {
+ public CustomerDTO SearchCustomer(String newValue) throws SQLException, ClassNotFoundException {
      Connection connection = DBConnection.getDbConnection().getConnection();
      PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
      pstm.setString(1, newValue + "");
      ResultSet rst = pstm.executeQuery();
-     return rst;
+     rst.next();
+     return new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
  }
 
  public ResultSet getAllCustomer() throws SQLException, ClassNotFoundException {
